@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +22,10 @@ import java.util.stream.Collectors;
 public class HelloWorldServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(true);
+        session.setMaxInactiveInterval(3600);
+        session.setAttribute("key", "value");
+
         resp.setContentType("text/html; charset=utf-8");
 
         resp.getWriter().write("<h1>Привіт ${name}!</h1>".replace("${name}", parseName(req)));
@@ -38,6 +43,8 @@ public class HelloWorldServlet extends HttpServlet {
 
         resp.getWriter().write("<br>Headers</br>");
         resp.getWriter().write(getAllHeaders(req));
+
+//        resp.setHeader("Set-Cookie", "testCookie=testCookieValue");
 
         resp.getWriter().close();
     }
